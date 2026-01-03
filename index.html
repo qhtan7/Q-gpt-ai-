@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q جي بي تي - منصة الذكاء الاصطناعي المجانية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark-bg: #0f0f1e;
+            --darker-bg: #0a0a14;
+            --card-bg: #1a1a2e;
+            --card-border: #2d2d4a;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8d1;
+            --text-accent: #a78bfa;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-sm: 0 5px 20px rgba(0, 0, 0, 0.2);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(245, 87, 108, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .floating-elements { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .floating-element { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+        .floating-1 { background: var(--primary-gradient); top: 10%; left: 10%; animation: float 20s infinite ease-in-out; }
+        .floating-2 { background: var(--secondary-gradient); bottom: 10%; right: 10%; animation: float 25s infinite ease-in-out reverse; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 40px) scale(0.9); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        .app-header {
+            background: rgba(15, 15, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .logo-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .logo-icon {
+            width: 50px; height: 50px; background: var(--primary-gradient);
+            border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 900; box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+        }
+
+        .logo-text {
+            font-size: 28px; font-weight: 900;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions { display: flex; gap: 15px; }
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary); padding: 12px 24px; border-radius: var(--radius-md);
+            cursor: pointer; font-family: inherit; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;
+        }
+
+        .header-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-3px); }
+
+        .chat-container {
+            max-width: 1000px; margin: 0 auto; padding: 40px 30px;
+            display: flex; flex-direction: column; gap: 25px; min-height: calc(100vh - 200px);
+        }
+
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: var(--radius-lg); padding: 40px; text-align: center; backdrop-filter: blur(10px);
+        }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .feature-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-md); padding: 25px; }
+
+        .message {
+            display: flex; gap: 20px; padding: 25px; border-radius: var(--radius-lg);
+            background: rgba(26, 26, 46, 0.6); border: 1px solid var(--card-border);
+            animation: messageAppear 0.5s ease-out;
+        }
+
+        @keyframes messageAppear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .user-message { border-right: 4px solid #667eea; }
+        .ai-message { border-right: 4px solid #f5576c; }
+
+        .message-avatar { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .user-avatar { background: var(--primary-gradient); }
+        .ai-avatar { background: var(--secondary-gradient); }
+
+        .message-content { flex: 1; line-height: 1.7; font-size: 17px; white-space: pre-wrap; }
+
+        .input-section { max-width: 1000px; margin: 0 auto 40px; padding: 0 30px; position: sticky; bottom: 20px; }
+        .input-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 15px; box-shadow: var(--shadow-lg); }
+        .input-wrapper { display: flex; gap: 15px; }
+        .message-input { flex: 1; background: transparent; border: none; color: white; font-family: inherit; font-size: 16px; resize: none; outline: none; padding: 10px; }
+        .send-button { background: var(--primary-gradient); border: none; width: 55px; height: 55px; border-radius: var(--radius-md); color: white; cursor: pointer; transition: 0.3s; }
+        .send-button:hover { transform: scale(1.05); }
+
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--success); display: inline-block; margin-left: 5px; }
+        
+        .notification {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            padding: 15px 25px; border-radius: 10px; color: white; z-index: 3000; animation: fadeIn 0.3s;
+        }
+        .success { background: #10b981; } .error { background: #ef4444; }
+
+        .typing-indicator { display: flex; gap: 5px; padding: 10px; }
+        .typing-dot { width: 8px; height: 8px; background: #888; border-radius: 50%; animation: bounce 1.4s infinite; }
+        @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } }
+
+        @media (max-width: 768px) {
+            .app-header { padding: 15px; flex-direction: column; }
+            .chat-container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-elements">
+        <div class="floating-element floating-1"></div>
+        <div class="floating-element floating-2"></div>
+    </div>
+
+    <header class="app-header">
+        <a href="#" class="logo-container">
+            <div class="logo-icon">Q</div>
+            <div>
+                <div class="logo-text">Q جي بي تي</div>
+            </div>
+        </a>
+        <div class="header-actions">
+            <button class="header-btn" id="newChatBtn"><i class="fas fa-plus"></i> جديد</button>
+            <button class="header-btn" id="clearChatBtn"><i class="fas fa-trash"></i> مسح</button>
+        </div>
+    </header>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="welcome-message" id="welcomeBox">
+            <h1 style="margin-bottom:15px">مرحباً بك في Q جي بي تي</h1>
+            <p>مساعدك الذكي المجاني. اسألني أي شيء!</p>
+            <div class="features-grid">
+                <div class="feature-card"><i class="fas fa-code"></i><p>برمجة</p></div>
+                <div class="feature-card"><i class="fas fa-pen"></i><p>كتابة</p></div>
+                <div class="feature-card"><i class="fas fa-brain"></i><p>تحليل</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea class="message-input" id="messageInput" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
+                <button class="send-button" id="sendButton"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div style="margin-top:10px; font-size:12px; color:var(--text-secondary)">
+                <span class="status-dot"></span> <span id="statusText">متصل وجاهز</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const welcomeBox = document.getElementById('welcomeBox');
+        
+        let conversationHistory = JSON.parse(localStorage.getItem('qgpt_history')) || [];
+        let isProcessing = false;
+
+        const API_KEYS = [
+            "AIzaSyA51PNU9NGYjzJc8PHeWDq-HHKo6Sn2hN0",
+            "AIzaSyBxVVe2XxIYePqItzOaj5pAeAgcm0nvy68"
+        ];
+
+        window.onload = () => {
+            if (conversationHistory.length > 0) {
+                welcomeBox.style.display = 'none';
+                conversationHistory.forEach(msg => renderMessage(msg.content, msg.role));
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        };
+
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || isProcessing) return;
+
+            // تحديث الواجهة
+            welcomeBox.style.display = 'none';
+            renderMessage(text, 'user');
+            saveMessage(text, 'user');
+            
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            isProcessing = true;
+            toggleLoading(true);
+
+            try {
+                let aiResponse = null;
+                for (let key of API_KEYS) {
+                    try {
+                        aiResponse = await callGemini(text, key);
+                        if (aiResponse) break;
+                    } catch (e) { console.error("Key failed", e); }
+                }
+
+                if (aiResponse) {
+                    renderMessage(aiResponse, 'assistant');
+                    saveMessage(aiResponse, 'assistant');
+                } else {
+                    throw new Error("جميع المفاتيح فشلت");
+                }
+            } catch (error) {
+                showNotification("عذراً، حدث خطأ في الاتصال", "error");
+            } finally {
+                isProcessing = false;
+                toggleLoading(false);
+            }
+        }
+
+        async function callGemini(prompt, key) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        function renderMessage(content, role) {
+            const div = document.createElement('div');
+            div.className = `message ${role === 'user' ? 'user-message' : 'ai-message'}`;
+            
+            const avatar = role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+            const avatarClass = role === 'user' ? 'user-avatar' : 'ai-avatar';
+
+            div.innerHTML = `
+                <div class="message-avatar ${avatarClass}">${avatar}</div>
+                <div class="message-content">${formatText(content)}</div>
+            `;
+            
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function formatText(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                       .replace(/`(.*?)`/g, '<code>$1</code>');
+        }
+
+        function saveMessage(content, role) {
+            conversationHistory.push({ content, role });
+            localStorage.setItem('qgpt_history', JSON.stringify(conversationHistory));
+        }
+
+        function toggleLoading(show) {
+            const statusText = document.getElementById('statusText');
+            if (show) {
+                statusText.innerText = "جاري التفكير...";
+                const loader = document.createElement('div');
+                loader.id = "loader";
+                loader.className = "typing-indicator";
+                loader.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+                chatContainer.appendChild(loader);
+            } else {
+                statusText.innerText = "متصل وجاهز";
+                const loader = document.getElementById('loader');
+                if (loader) loader.remove();
+            }
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showNotification(msg, type) {
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.innerText = msg;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+
+        document.getElementById('clearChatBtn').onclick = () => {
+            if(confirm("مسح المحادثة؟")) {
+                localStorage.removeItem('qgpt_history');
+                location.reload();
+            }
+        };
+
+        document.getElementById('newChatBtn').onclick = () => location.reload();
+
+        sendButton.onclick = sendMessage;
+        messageInput.onkeydown = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        };
+
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>
